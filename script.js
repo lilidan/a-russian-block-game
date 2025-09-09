@@ -41,6 +41,7 @@ let player = {
     matrix: null,
     score: 0
 };
+let nextPiece = null;
 
 // DOM elements
 const boardElement = document.getElementById('board');
@@ -177,12 +178,13 @@ function playerMove(dir) {
 function playerRotate() {
     const pos = player.pos.x;
     let offset = 1;
+    const originalMatrix = player.matrix.map(row => [...row]);
     rotate(player.matrix);
     while (collide()) {
         player.pos.x += offset;
         offset = -(offset + (offset > 0 ? 1 : -1));
         if (offset > player.matrix[0].length) {
-            rotate(player.matrix);
+            player.matrix = originalMatrix;
             player.pos.x = pos;
             return;
         }
@@ -206,7 +208,10 @@ function collide() {
         for (let x = 0; x < m[y].length; ++x) {
             if (m[y][x] !== 0 &&
                 (board[y + o.y] &&
-                board[y + o.y][x + o.x]) !== 0) {
+                board[y + o.y][x + o.x]) !== 0 ||
+                y + o.y >= ROWS ||
+                x + o.x < 0 ||
+                x + o.x >= COLS) {
                 return true;
             }
         }
@@ -250,7 +255,10 @@ function playerHardDrop() {
 // Reset the player with a new piece
 function playerReset() {
     const pieces = 'IJLOSTZ';
-    player.matrix = nextPiece || createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
+    if (!nextPiece) {
+        nextPiece = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
+    }
+    player.matrix = nextPiece;
     nextPiece = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
     drawNextPiece(nextPiece);
     
@@ -274,8 +282,9 @@ function sweepRows() {
             }
         }
         
-        const row = board.splice(y, 1)[0].fill(0);
-        board.unshift(row);
+        // Remove the completed row and add a new empty row at the top
+        board.splice(y, 1);
+        board.unshift(Array(COLS).fill(0));
         ++y;
         
         rowCount++;
@@ -305,8 +314,6 @@ function updateScore() {
 }
 
 // Game loop
-let nextPiece = null;
-
 function update(time = 0) {
     if (gameOver || paused) return;
     
@@ -333,12 +340,6 @@ function draw() {
 function startGame() {
     if (gameOver) {
         resetGame();
-    }
-    
-    if (!nextPiece) {
-        const pieces = 'IJLOSTZ';
-        nextPiece = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
-        drawNextPiece(nextPiece);
     }
     
     gameOver = false;
