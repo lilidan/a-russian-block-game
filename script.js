@@ -87,14 +87,14 @@ function createNextPieceBoard() {
 
 // Create a new piece
 function createPiece(type) {
+    if (!SHAPES[type] || type === 0) return null;
     return SHAPES[type].map(row => [...row]);
 }
 
 // Get a random piece
 function getRandomPiece() {
-    const pieces = 'IJLOSTZ';
-    const rand = Math.floor(Math.random() * pieces.length);
-    return createPiece(pieces[rand]);
+    const pieceIndex = Math.floor(Math.random() * 7) + 1;
+    return createPiece(pieceIndex);
 }
 
 // Draw the board
@@ -254,16 +254,17 @@ function playerHardDrop() {
 
 // Reset the player with a new piece
 function playerReset() {
-    const pieces = 'IJLOSTZ';
     if (!nextPiece) {
-        nextPiece = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
+        nextPiece = getRandomPiece();
     }
     player.matrix = nextPiece;
-    nextPiece = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
+    nextPiece = getRandomPiece();
     drawNextPiece(nextPiece);
     
     player.pos.y = 0;
-    player.pos.x = Math.floor(COLS / 2) - Math.floor(player.matrix[0].length / 2);
+    if (player.matrix) {
+        player.pos.x = Math.floor(COLS / 2) - Math.floor(player.matrix[0].length / 2);
+    }
     
     if (collide()) {
         gameOver = true;
