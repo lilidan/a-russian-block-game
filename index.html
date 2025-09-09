@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russian Block Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Russian Block Game</h1>
+            <div class="game-info">
+                <div class="score-container">
+                    <span>Score:</span>
+                    <span id="score">0</span>
+                </div>
+                <div class="level-container">
+                    <span>Level:</span>
+                    <span id="level">1</span>
+                </div>
+                <div class="lines-container">
+                    <span>Lines:</span>
+                    <span id="lines">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-area">
+            <div class="game-board" id="board"></div>
+            <div class="side-panel">
+                <div class="next-piece-container">
+                    <h3>Next Piece</h3>
+                    <div class="next-piece" id="next-piece"></div>
+                </div>
+                <div class="controls">
+                    <h3>Controls</h3>
+                    <ul>
+                        <li>← → : Move</li>
+                        <li>↑ : Rotate</li>
+                        <li>↓ : Soft Drop</li>
+                        <li>Space : Hard Drop</li>
+                        <li>P : Pause</li>
+                    </ul>
+                </div>
+                <button id="start-button">Start Game</button>
+                <button id="pause-button">Pause</button>
+            </div>
+        </div>
+        
+        <div class="game-over" id="game-over" style="display: none;">
+            <h2>Game Over!</h2>
+            <p>Your Score: <span id="final-score">0</span></p>
+            <button id="restart-button">Play Again</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
